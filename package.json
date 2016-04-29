@@ -1,0 +1,37 @@
+{
+  "name": "push2cloud-cf-adapter",
+  "version": "1.0.0",
+  "description": "abstracts cloud foundry api",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint .",
+    "test": "npm run lint && mocha"
+  },
+  "engines": {
+    "node": ">=4.2.0"
+  },
+  "author": "Adriano Raiano <adriano@raiano.ch> (https://github.com/adrai)",
+  "contributors": [
+    "Adriano Raiano <adriano@raiano.ch> (https://github.com/adrai)",
+    "Christoph Hermann <schtoeffel@gmail.com> (http://stoeffel.github.io/)",
+    "Michael Erne <michael.erne@gmail.com> (https://github.com/michaelerne)"
+  ],
+  "license": "Apache-2.0",
+  "repository": "push2cloud/cf-adapter",
+  "homepage": "http://push2.cloud/",
+  "dependencies": {
+    "archiver": "1.0.0",
+    "async": "2.0.0-rc.3",
+    "debug": "2.2.0",
+    "filewalker": "0.1.2",
+    "gitignore-parser": "0.0.2",
+    "lodash": "4.11.1",
+    "request": "2.72.0",
+    "semver": "5.1.0",
+    "ws": "1.1.0"
+  },
+  "devDependencies": {
+    "eslint": "2.8.0",
+    "expect.js": "0.3.1"
+  }
+}

@@ -1,0 +1,42 @@
+# IntelliJ IDEA files
+*.iml
+*.ipr
+*.ids
+*.iws
+.idea/
+
+# Eclipse files
+.project
+.metadata
+local.properties
+.classpath
+.settings/
+.loadpath
+bin/
+
+# OS dependent files
+.DS_Store
+.Spotlight-V100
+.Trashes
+Thumbs.db
+Desktop.ini
+*~
+
+# Ignore Vagrant generated directories
+.vagrant
+
+# Ignore various Node.js related directories and files
+node_modules
+node_modules/**/*
+
+private_node_modules
+private_node_modules/**/*
+
+.config
+.node-gyp
+.npm
+tmp
+.pm2
+
+__workspace
+__manifests
