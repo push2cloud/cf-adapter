@@ -46,7 +46,7 @@ module.exports = (options) => {
         // called as promise..
         debug(`called ${fn.name} as promise...${additionalInfos}`);
         return new Promise((resolve, reject) => {
-          args.push((err) => {
+          args.push(function(err) {
             var responseArgs = _.toArray(arguments);
             responseArgs.shift();
             if (err) {
