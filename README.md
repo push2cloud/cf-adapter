@@ -111,6 +111,14 @@ Each asynchronous call can be done with classical callback style or with promise
 * [`disassociateRoute`](#disassociateRoute)
 * [`deleteRoute`](#deleteRoute)
 
+### Service
+
+* [`createServiceInstance`](#createServiceInstance)
+* [`bindService`](#bindService)
+* [`unbindService`](#unbindService)
+* [`deleteServiceInstance`](#deleteServiceInstance)
+
+
 
 ## General
 
@@ -611,5 +619,113 @@ api.deleteRoute({
   app: 'temp-app',
   hostname: 'my-app',
   domain: 'applicationcloud.io'
+}, (err, result) => {});
+```
+
+---------------------------------------
+
+## Service
+
+Service related api methods.
+
+<a name="createServiceInstance"></a>
+
+### createServiceInstance(options, [callback])
+
+Creates a service instance.
+
+__Arguments__
+
+* `options` - An options containing:
+  * `name` - The service instance name.
+  * `type` - The service type.
+  * `plan` - The service plan.
+  * `parameters` - *Optional* Arbitrary parameters to pass along to the service broker. Must be an object.
+  * `tags` - *Optional* An array of strings for the service instance. Max characters: 2048
+* `callback(err, result)` - A callback which is called when function has finished, or an error occurs.
+
+__Example__
+
+```js
+api.createServiceInstance({
+  name: 'my-db',
+  type: 'mongodb',
+  plan: 'small'
+}, (err, result) => {});
+```
+
+---------------------------------------
+
+<a name="bindService"></a>
+
+### bindService(options, [callback])
+
+Binds a service instance to an app.
+
+__Arguments__
+
+* `options` - An options containing:
+  * `appGuid` - *Optional* The app guid. `appGuid` or `app` are mandatory but not both.
+  * `app` - *Optional* The app name. `appGuid` or `app` are mandatory but not both.
+  * `service` - *Optional* The service instance name. `serviceInstanceGuid` or `service` are mandatory but not both.
+  * `serviceInstanceGuid` - *Optional*  The service instance guid. `serviceInstanceGuid` or `service` are mandatory but not both.
+  * `parameters` - *Optional* Arbitrary parameters to pass along to the service broker. Must be an object.
+* `callback(err, result)` - A callback which is called when function has finished, or an error occurs.
+
+__Example__
+
+```js
+api.bindService({
+  app: 'temp-app',
+  service: 'my-db'
+}, (err, result) => {});
+```
+
+---------------------------------------
+
+<a name="unbindService"></a>
+
+### unbindService(options, [callback])
+
+Unbinds a service instance from an app.
+
+__Arguments__
+
+* `options` - An options containing:
+  * `app` - *Optional* The app name. `serviceBindingGuid` or `app` and service` are mandatory but not all.
+  * `service` - *Optional* The service instance name. `serviceBindingGuid` or `app` and service` are mandatory but not all.
+  * `serviceBindingGuid` - *Optional* `serviceBindingGuid` or `app` and service` are mandatory but not all.
+* `callback(err, result)` - A callback which is called when function has finished, or an error occurs.
+
+__Example__
+
+```js
+api.unbindService({
+  app: 'temp-app',
+  service: 'my-db'
+}, (err, result) => {});
+```
+
+---------------------------------------
+
+<a name="deleteServiceInstance"></a>
+
+### deleteServiceInstance(options, [callback])
+
+Deletes a service instance.
+
+__Arguments__
+
+* `options` - An options containing:
+  * `name` - *Optional* The service instance name. `serviceInstanceGuid` or `name` are mandatory but not both.
+  * `serviceInstanceGuid` - *Optional*  The service instance guid. `serviceInstanceGuid` or `name` are mandatory but not both.
+* `callback(err, result)` - A callback which is called when function has finished, or an error occurs.
+
+__Example__
+
+```js
+api.deleteServiceInstance({
+  app: 'temp-app',
+  service: 'my-db'
 }, (err, result) => {});
 ```
