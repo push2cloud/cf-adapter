@@ -266,7 +266,7 @@ api.getInfo((err, result) => {
 
 ### pushApp([callback])
 
-...
+Creates and uploads an app.
 
 __Arguments__
 
