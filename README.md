@@ -26,7 +26,7 @@ const api = cf({
 api.init((err, result) => {
   api.pushApp({
     name: 'temp-app',
-    appPath: '/path/to/sampleApp'
+    path: '/path/to/sampleApp'
   }, (err, app) => {
     api.stageApp({
       appGuid: app.metadata.guid
@@ -47,7 +47,7 @@ api.init()
 .then((app) => {
   return api.pushApp({
     name: 'temp-app',
-    appPath: '/path/to/sampleApp'
+    path: '/path/to/sampleApp'
   });
 })
 .then((app) => {
@@ -87,17 +87,27 @@ const cf = require('push2cloud-cf-adapter');
 ## Documentation
 Each asynchronous call can be done with classical callback style or with promise style.
 
-<!-- ### Collections -->
+### General
 
 * [`init`](#init)
 * [`getInfo`](#getInfo)
+
+### App
+
+* [`createApp`](#createApp)
+* [`uploadApp`](#uploadApp)
 * [`pushApp`](#pushApp)
+* [`stageApp`](#stageApp)
+* [`startApp`](#startApp)
+* [`stopApp`](#stopApp)
+* [`restartApp`](#restartApp)
+* [`startAppAndWaitForInstances`](#startAppAndWaitForInstances)
 
 
-<!-- ## Collections
+## General
 
-Collection methods can iterate over Arrays, Objects, Maps, Sets, and any object that implements the ES2015 iterator protocol.
--->
+General api methods.
+
 
 <a name="init"></a>
 
@@ -262,17 +272,20 @@ api.getInfo((err, result) => {
 
 ---------------------------------------
 
-<a name="pushApp"></a>
+## App
 
-### pushApp([callback])
+App related api methods.
 
-Creates and uploads an app.
+<a name="createApp"></a>
+
+### createApp(options, [callback])
+
+Creates an app.
 
 __Arguments__
 
 * `options` - An options containing:
   * `name` - The app name.
-  * `appPath` - The path to for the app on the filesystem.
   * `buildpack` - *Optional* Buildpack to build the app. 3 options:
     * a) Blank or not set means autodetection.
     * b) A Git Url pointing to a buildpack.
@@ -287,8 +300,174 @@ __Arguments__
 __Example__
 
 ```js
+api.createApp({
+  name: 'temp-app'
+}, (err, result) => {});
+```
+
+---------------------------------------
+
+<a name="uploadApp"></a>
+
+### uploadApp(options, [callback])
+
+Uploads an app.
+
+__Arguments__
+
+* `options` - An options containing:
+  * `appGuid` - *Optional* The app guid. `appGuid` or `name` are mandatory but not both.
+  * `name` - *Optional* The app name. `appGuid` or `name` are mandatory but not both.
+  * `path` - The path to the app on your filesystem.
+  * `tmpZipPath` - *Optional* Custom temporary path to save the zip file. Default is `path` + '.zip.tmp'.
+* `callback(err, result)` - A callback which is called when function has finished, or an error occurs.
+
+__Example__
+
+```js
+api.uploadApp({
+  path: '/path/to/sampleApp'
+}, (err, result) => {});
+```
+
+---------------------------------------
+
+<a name="pushApp"></a>
+
+### pushApp(options, [callback])
+
+Creates and uploads an app.
+
+__Arguments__
+
+* `options` - See combined `options` argument of [`createApp`](#createApp) and [`uploadApp`](#uploadApp).
+* `callback(err, result)` - A callback which is called when function has finished, or an error occurs.
+
+__Example__
+
+```js
 api.pushApp({
   name: 'temp-app',
-  appPath: '/path/to/sampleApp'
+  path: '/path/to/sampleApp'
+}, (err, result) => {});
+```
+
+---------------------------------------
+
+<a name="stageApp"></a>
+
+### stageApp(options, [callback])
+
+Stages an app. Creates a droplet so the effective start of that app will be much faster.
+
+__Arguments__
+
+* `options` - An options containing:
+  * `appGuid` - *Optional* The app guid. `appGuid` or `name` are mandatory but not both.
+  * `name` - *Optional* The app name. `appGuid` or `name` are mandatory but not both.
+  * `stageTimeout` - *Optional* Will return if staging duration is longer than that value in seconds. Default is 300.
+* `callback(err, result)` - A callback which is called when function has finished, or an error occurs.
+
+__Example__
+
+```js
+api.stageApp({
+  name: 'temp-app'
+}, (err, result) => {});
+```
+
+---------------------------------------
+
+<a name="startApp"></a>
+
+### startApp(options, [callback])
+
+Starts an app.
+
+__Arguments__
+
+* `options` - An options containing:
+  * `appGuid` - *Optional* The app guid. `appGuid` or `name` are mandatory but not both.
+  * `name` - *Optional* The app name. `appGuid` or `name` are mandatory but not both.
+* `callback(err, result)` - A callback which is called when function has finished, or an error occurs.
+
+__Example__
+
+```js
+api.startApp({
+  name: 'temp-app'
+}, (err, result) => {});
+```
+
+---------------------------------------
+
+<a name="stopApp"></a>
+
+### stopApp(options, [callback])
+
+Stops an app.
+
+__Arguments__
+
+* `options` - An options containing:
+  * `appGuid` - *Optional* The app guid. `appGuid` or `name` are mandatory but not both.
+  * `name` - *Optional* The app name. `appGuid` or `name` are mandatory but not both.
+* `callback(err, result)` - A callback which is called when function has finished, or an error occurs.
+
+__Example__
+
+```js
+api.stopApp({
+  name: 'temp-app'
+}, (err, result) => {});
+```
+
+---------------------------------------
+
+<a name="restartApp"></a>
+
+### restartApp(options, [callback])
+
+Restarts an app.
+
+__Arguments__
+
+* `options` - An options containing:
+  * `appGuid` - *Optional* The app guid. `appGuid` or `name` are mandatory but not both.
+  * `name` - *Optional* The app name. `appGuid` or `name` are mandatory but not both.
+* `callback(err, result)` - A callback which is called when function has finished, or an error occurs.
+
+__Example__
+
+```js
+api.restartApp({
+  name: 'temp-app'
+}, (err, result) => {});
+```
+
+---------------------------------------
+
+<a name="startAppAndWaitForInstances"></a>
+
+### startAppAndWaitForInstances(options, [callback])
+
+Starts an app and waits for all instances to run stable.
+
+__Arguments__
+
+* `options` - An options containing:
+  * `appGuid` - *Optional* The app guid. `appGuid` or `name` are mandatory but not both.
+  * `name` - *Optional* The app name. `appGuid` or `name` are mandatory but not both.
+  * `startTimeout` - *Optional* Will return if starting duration is longer than that value in seconds. Default is 30.
+  * `interval` - *Optional* The interval in seconds to wait between checking the app instance state. Default is 3.
+  * `timeout` - *Optional* Will return if starting duration of a single instance is longer than that value in seconds. Default is 30.
+  * `gracePeriod` - *Optional* Period to check and wait for the app instances not crashing. Default is 40.
+* `callback(err, result)` - A callback which is called when function has finished, or an error occurs.
+
+__Example__
+
+```js
+api.startAppAndWaitForInstances({
+  name: 'temp-app'
 }, (err, result) => {});
 ```
