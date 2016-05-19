@@ -26,7 +26,7 @@ const api = cf({
 api.init((err, result) => {
   api.pushApp({
     name: 'temp-app',
-    appPath: join(__dirname, '/sampleApp')
+    appPath: '/path/to/sampleApp'
   }, (err, app) => {
     api.stageApp({
       appGuid: app.metadata.guid
@@ -44,6 +44,12 @@ api.init((err, result) => {
 
 // or the promise way...
 api.init()
+.then((app) => {
+  return api.pushApp({
+    name: 'temp-app',
+    appPath: '/path/to/sampleApp'
+  });
+})
 .then((app) => {
   return api.stageApp({
     appGuid: app.metadata.guid
@@ -85,6 +91,7 @@ Each asynchronous call can be done with classical callback style or with promise
 
 * [`init`](#init)
 * [`getInfo`](#getInfo)
+* [`pushApp`](#pushApp)
 
 
 <!-- ## Collections
@@ -100,9 +107,9 @@ Retrieves information of the current space. i.e. apps, services, service binding
 
 __Arguments__
 
-none
+* `callback(err, result)` - A callback which is called when function has finished, or an error occurs.
 
-__Examples__
+__Example__
 
 
 ```js
@@ -113,7 +120,11 @@ const api = cf({
   username: 'my-funny-username',
   password: 'my-very-secret-password',
   org: 'the-cf-org',
-  space: 'the-cf-space'
+  space: 'the-cf-space',
+  rejectUnauthorized: true, // optional
+  maxRetries: 3, // optional
+  delay: 1000, // optional
+  delayFactor: 1 // optional
 });
 
 api.init((err, result) => {
@@ -222,7 +233,7 @@ Retrieves information of the cloud foundry platform.
 
 __Arguments__
 
-none
+* `callback(err, result)` - A callback which is called when function has finished, or an error occurs.
 
 __Example__
 
@@ -247,4 +258,37 @@ api.getInfo((err, result) => {
   //   "doppler_logging_endpoint": "wss://doppler.lyra-836.appcloud.swisscom.com:443"
   // }
 });
+```
+
+---------------------------------------
+
+<a name="pushApp"></a>
+
+### pushApp([callback])
+
+...
+
+__Arguments__
+
+* `options` - An options containing:
+  * `name` - The app name.
+  * `appPath` - The path to for the app on the filesystem.
+  * `buildpack` - *Optional* Buildpack to build the app. 3 options:
+    * a) Blank or not set means autodetection.
+    * b) A Git Url pointing to a buildpack.
+    * c) Name of an installed buildpack.
+  * `command` - *Optional* The command to start an app after it is staged, maximum length: 4096 (e.g. 'rails s -p $PORT' or 'java com.org.Server $PORT').
+  * `env` - *Optional* Object containing key/value pairs of all the environment variables to run in your app. Does not include any system or service variables.
+  * `disk` - *Optional* The maximum amount of disk available to an instance of an app. i.e. 256MB, 1G, 256, 1024
+  * `memory` - *Optional* The amount of memory each instance should have. i.e. 256MB, 1G, 256, 1024
+  * `instances` - *Optional* The number of instances of the app to run. To ensure optimal availability, ensure there are at least 2 instances.
+* `callback(err, result)` - A callback which is called when function has finished, or an error occurs.
+
+__Example__
+
+```js
+api.pushApp({
+  name: 'temp-app',
+  appPath: '/path/to/sampleApp'
+}, (err, result) => {});
 ```
