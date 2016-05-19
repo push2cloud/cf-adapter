@@ -5,8 +5,6 @@ module.exports = (api) => {
   const create = (options, callback) => {
     options = options || {};
 
-    options.parameters = options.parameters || {};
-
     if (!api.spaceGuid) {
       return callback(new Error('Please provide a space! \n' + JSON.stringify(options, null, 2)));
     }

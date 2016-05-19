@@ -102,6 +102,14 @@ Each asynchronous call can be done with classical callback style or with promise
 * [`stopApp`](#stopApp)
 * [`restartApp`](#restartApp)
 * [`startAppAndWaitForInstances`](#startAppAndWaitForInstances)
+* [`deleteApp`](#deleteApp)
+
+### Route
+
+* [`createRoute`](#createRoute)
+* [`associateRoute`](#associateRoute)
+* [`disassociateRoute`](#disassociateRoute)
+* [`deleteRoute`](#deleteRoute)
 
 
 ## General
@@ -469,5 +477,139 @@ __Example__
 ```js
 api.startAppAndWaitForInstances({
   name: 'temp-app'
+}, (err, result) => {});
+```
+
+---------------------------------------
+
+<a name="deleteApp"></a>
+
+### deleteApp(options, [callback])
+
+Deletes an app.
+
+__Arguments__
+
+* `options` - An options containing:
+  * `appGuid` - *Optional* The app guid. `appGuid` or `name` are mandatory but not both.
+  * `name` - *Optional* The app name. `appGuid` or `name` are mandatory but not both.
+* `callback(err, result)` - A callback which is called when function has finished, or an error occurs.
+
+__Example__
+
+```js
+api.deleteApp({
+  name: 'temp-app'
+}, (err, result) => {});
+```
+
+---------------------------------------
+
+## Route
+
+Route related api methods.
+
+<a name="createRoute"></a>
+
+### createRoute(options, [callback])
+
+Creates a route.
+
+__Arguments__
+
+* `options` - An options containing:
+  * `domainGuid` - *Optional* The app guid. `domainGuid` or `domain` are mandatory but not both.
+  * `domain` - *Optional* The app name. `domainGuid` or `domain` are mandatory but not both.
+  * `hostname` - The host portion of the route. Required for shared-domains.
+* `callback(err, result)` - A callback which is called when function has finished, or an error occurs.
+
+__Example__
+
+```js
+api.createRoute({
+  hostname: 'my-app',
+  domain: 'applicationcloud.io'
+}, (err, result) => {});
+```
+
+---------------------------------------
+
+<a name="associateRoute"></a>
+
+### associateRoute(options, [callback])
+
+Associates a route to an app.
+
+__Arguments__
+
+* `options` - An options containing:
+  * `appGuid` - *Optional* The app guid. `appGuid` or `app` are mandatory but not both.
+  * `app` - *Optional* The app name. `appGuid` or `app` are mandatory but not both.
+  * `routeGuid` - *Optional* The route guid. `routeGuid` or `domain` and `hostname` are mandatory but not all.
+  * `domain` - *Optional* The app name. `routeGuid` or `domain` and `hostname` are mandatory but not all.
+  * `hostname` - *Optional* The host portion of the route. Required for shared-domains. `routeGuid` or `domain` and `hostname` are mandatory but not all.
+* `callback(err, result)` - A callback which is called when function has finished, or an error occurs.
+
+__Example__
+
+```js
+api.associateRoute({
+  app: 'temp-app',
+  hostname: 'my-app',
+  domain: 'applicationcloud.io'
+}, (err, result) => {});
+```
+
+---------------------------------------
+
+<a name="disassociateRoute"></a>
+
+### disassociateRoute(options, [callback])
+
+Disassociates a route from an app.
+
+__Arguments__
+
+* `options` - An options containing:
+  * `appGuid` - *Optional* The app guid. `appGuid` or `app` are mandatory but not both.
+  * `app` - *Optional* The app name. `appGuid` or `app` are mandatory but not both.
+  * `routeGuid` - *Optional* The route guid. `routeGuid` or `domain` and `hostname` are mandatory but not all.
+  * `domain` - *Optional* The app name. `routeGuid` or `domain` and `hostname` are mandatory but not all.
+  * `hostname` - *Optional* The host portion of the route. Required for shared-domains. `routeGuid` or `domain` and `hostname` are mandatory but not all.
+* `callback(err, result)` - A callback which is called when function has finished, or an error occurs.
+
+__Example__
+
+```js
+api.disassociateRoute({
+  app: 'temp-app',
+  hostname: 'my-app',
+  domain: 'applicationcloud.io'
+}, (err, result) => {});
+```
+
+---------------------------------------
+
+<a name="deleteRoute"></a>
+
+### deleteRoute(options, [callback])
+
+Deletes a route.
+
+__Arguments__
+
+* `options` - An options containing:
+  * `routeGuid` - *Optional* The route guid. `routeGuid` or `domain` and `hostname` are mandatory but not all.
+  * `domain` - *Optional* The app name. `routeGuid` or `domain` and `hostname` are mandatory but not all.
+  * `hostname` - *Optional* The host portion of the route. Required for shared-domains. `routeGuid` or `domain` and `hostname` are mandatory but not all.
+* `callback(err, result)` - A callback which is called when function has finished, or an error occurs.
+
+__Example__
+
+```js
+api.deleteRoute({
+  app: 'temp-app',
+  hostname: 'my-app',
+  domain: 'applicationcloud.io'
 }, (err, result) => {});
 ```
