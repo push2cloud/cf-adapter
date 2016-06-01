@@ -1,7 +1,7 @@
 const debug = require('debug')('push2cloud-cf-adapter:graceRequest');
 const request = require('request');
 const _ = require('lodash');
-const notAuthenticatedCheck = require('../lib/notAuthenticated');
+const notAuthenticatedCheck = require('../lib/graceRequestHandler/notAuthenticated');
 const commonRetryChecks = [
   require('../lib/graceRequestHandler/connectionReset'),
   require('../lib/graceRequestHandler/timeout')
