@@ -59,7 +59,10 @@ module.exports = (api) => {
 
           if (result && (result.code === 1000 || result.error_description === 'Unable to verify token')) {
             api.login((err, refreshedToken) => {
-              if (err) return debug(err);
+              if (err) {
+                debug(err);
+                return callback(err);
+              }
               if (refreshedToken) {
                 api.token = refreshedToken;
               }
