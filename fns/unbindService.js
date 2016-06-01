@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const asyncOperationInProgressCheck = require('../lib/graceRequestHandler/asyncOperationInProgress');
 
 module.exports = (api) => {
   return (options, callback) => {
@@ -22,7 +23,7 @@ module.exports = (api) => {
     api.graceRequest({
       method: 'DELETE',
       uri: `/v2/service_bindings/${options.serviceBindingGuid}`
-    }, (err, response, result) => {
+    }, asyncOperationInProgressCheck, (err, response, result) => {
       if (err && response && response.error_code === 'CF-ServiceBindingNotFound') {
         api.getServiceBinding({ serviceBindingGuid: options.serviceBindingGuid }, (newError, result) => {
           if (newError) {
@@ -36,7 +37,7 @@ module.exports = (api) => {
           api.graceRequest({
             method: 'DELETE',
             uri: `/v2/service_bindings/${options.serviceBindingGuid}`
-          }, (err, response, result) => {
+          }, asyncOperationInProgressCheck, (err, response, result) => {
             if (err) {
               return callback(err);
             }

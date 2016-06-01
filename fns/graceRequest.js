@@ -1,10 +1,24 @@
 const debug = require('debug')('push2cloud-cf-adapter:graceRequest');
 const request = require('request');
 const _ = require('lodash');
+const notAuthenticatedCheck = require('../lib/notAuthenticated');
+const commonRetryChecks = [
+  require('../lib/graceRequestHandler/connectionReset'),
+  require('../lib/graceRequestHandler/timeout')
+];
 
 module.exports = (api) => {
-  return (opt, callback) => {
+  return (opt, retryFns, callback) => {
     opt = opt || {};
+
+    if (!callback) {
+      callback = retryFns;
+      retryFns = null;
+    }
+    if (!retryFns) retryFns = [];
+    if (_.isFunction(retryFns)) retryFns = [retryFns];
+
+    retryFns = commonRetryChecks.concat(retryFns).concat(api.graceRequestHandlers);
 
     var defaults = {
       method: 'GET',
@@ -24,10 +38,7 @@ module.exports = (api) => {
       setTimeout(() => {
         request(opt, (err, response, result) => {
           if (err) debug(err, result, opt);
-          if (!err && response && (
-            response.statusCode < 300/* ||
-            result && result.code*/
-          )) {
+          if (!err && response && response.statusCode < 300) {
             return callback(err, response, result);
           }
           if (attempt >= api.options.maxRetries) {
@@ -40,24 +51,16 @@ module.exports = (api) => {
             debug(`StatusCode: ${response.statusCode}`);
             debug(err, result, opt);
           }
-          // it seems, that sometimes statusCode is not a nubmer, therefore only ==
-          if (response && response.statusCode == 400) {
-            attempt++;
-            debug(`${attempt}. retry`);
-            return retry();
-          }
-          if (result && result.error_code && result.error_code.toLowerCase().indexOf('timeout') >= 0) {
-            attempt++;
-            debug(`${attempt}. retry`);
-            return retry();
-          }
-          if (result && result.error_code === 'UnknownError') {
-            attempt++;
-            debug(`${attempt}. retry`);
-            return retry();
-          }
 
-          if (result && (result.code === 1000 || result.error_description === 'Unable to verify token')) {
+          const toCheck = {
+            error: err,
+            response: response,
+            result: result,
+            attempt: attempt,
+            infos: opt
+          };
+
+          if (notAuthenticatedCheck(toCheck)) {
             api.login((err, refreshedToken) => {
               if (err) {
                 debug(err);
@@ -78,20 +81,32 @@ module.exports = (api) => {
             return;
           }
 
-          if (result && _.includes([10001, 10006, 60016, 10011], result.code)) {
+          var shouldRetry = false;
+          _.some(retryFns, (fn) => {
+            shouldRetry = fn(toCheck);
+            return !!shouldRetry;
+          });
+
+          if (shouldRetry) {
             attempt++;
-            debug(`${attempt}. retry`);
+            var reason = '';
+            if (_.isString(shouldRetry)) reason = ` reason: ${shouldRetry}`;
+            debug(`${attempt}. retry${reason}`);
+
+            api.stats.emit('retry', {
+              error: toCheck.error,
+              response: toCheck.response,
+              result: toCheck.result,
+              attempt: toCheck.attempt,
+              infos: toCheck.infos,
+              reason: reason
+            });
+
             return retry();
           }
 
           if (result && result.error_code) {
             return callback(new Error(result.description), response, result);
-          }
-
-          if (err && err.code === 'ECONNRESET') {
-            attempt++;
-            debug(`${attempt}. retry`);
-            return retry();
           }
 
           callback(err, response, result);

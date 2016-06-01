@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const debug = require('debug')('push2cloud-cf-adapter:bindService');
+const asyncOperationInProgressCheck = require('../lib/graceRequestHandler/asyncOperationInProgress');
 
 module.exports = (api) => {
   return (options, callback) => {
@@ -41,7 +42,7 @@ module.exports = (api) => {
         app_guid: options.appGuid,
         parameters: options.parameters
       }
-    }, (err, response, result) => {
+    }, asyncOperationInProgressCheck, (err, response, result) => {
       if (result && result.code === 90003) {
         if (!_.find(api.actualDeploymentConfig.serviceBindings, { appGuid: options.appGuid,
                                                                   serviceInstanceGuid: options.serviceInstanceGuid })) {

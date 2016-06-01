@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const _ = require('lodash');
 const debug = require('debug')('push2cloud-cf-adapter');
+const EventEmitter = require('events');
 
 const functions = [];
 const functionsPath = path.join(__dirname, 'fns');
@@ -69,6 +70,17 @@ module.exports = (options) => {
       }
     };
   });
+
+  api.graceRequestHandlers = [];
+  api.defineGraceRequestHandling = (fn) => {
+    if (_.isFunction(fn)) {
+      api.graceRequestHandlers = [fn];
+    } else {
+      api.graceRequestHandlers = fn;
+    }
+  };
+
+  api.stats = new EventEmitter();
 
   return api;
 };
