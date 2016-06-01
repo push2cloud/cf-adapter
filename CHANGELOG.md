@@ -1,3 +1,6 @@
+## [v1.0.4](https://github.com/push2cloud/cf-adapter/compare/v1.0.4...v1.0.5)
+- adds support for ignoring invalid certs in websockets
+
 ## [v1.0.4](https://github.com/push2cloud/cf-adapter/compare/v1.0.3...v1.0.4)
 - return correctly if login in graceRequest fails
 

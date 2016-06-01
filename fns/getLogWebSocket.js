@@ -21,7 +21,8 @@ module.exports = (api) => {
       headers : {
         Authorization: `${api.token.token_type} ${api.token.access_token}`
       },
-      origin: 'http://localhost'
+      origin: 'http://localhost',
+      rejectUnauthorized: api.options.rejectUnauthorized
     });
 
     ws.on('open', function open() {
