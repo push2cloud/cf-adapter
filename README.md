@@ -93,6 +93,8 @@ Each asynchronous call can be done with classical callback style or with promise
 
 * [`init`](#init)
 * [`getInfo`](#getInfo)
+* [`stats`](#stats)
+* [`attachRetryHandler`](#attachRetryHandler)
 
 ### App
 
@@ -288,6 +290,118 @@ api.getInfo((err, result) => {
 });
 ```
 
+---------------------------------------
+
+<a name="stats"></a>
+
+### stats.on('retry', [fn])
+
+Will be emitted when an api request will retry.
+
+__Arguments__
+
+* `fn(obj)` - A function which is called when an api request will retry.
+
+__Example__
+
+```js
+api.stats.on('retry', (obj) => {
+  console.log(obj);
+  // {
+  //   "error": null,
+  //   "response": { "statusCode": "500" /* rest of the response object */ },
+  //   "result": {
+  //     "code": 10011,
+  //     "description": "Database error",
+  //     "error_code": "CF-DatabaseError"
+  //   },
+  //   "attempt": 1,
+  //   "infos": {
+  //     "method": "POST",
+  //     "uri": "/v2/service_instances",
+  //     "json": {
+  //       "name": "my-db",
+  //       "space_guid": "7d8bf5be-a793-472b-8a84-78b04cc03864",
+  //       "service_plan_guid": "0ad5b617-0a32-4a24-ba24-216f191ab9ef",
+  //       "parameters": {},
+  //       "tags": []
+  //     },
+  //     "qs": { "accepts_incomplete": true },
+  //     "baseUrl": "https://api.lyra-836.appcloud.swisscom.com",
+  //     "rejectUnauthorized": true,
+  //     "headers": { "Authorization": "bearer eyJ..." }
+  //   },
+  //   "reason": "Database error"
+  // }
+});
+```
+
+---------------------------------------
+
+<a name="attachRetryHandler"></a>
+
+### api.attachRetryHandler([fn])
+
+You can attach you own retryHandler for your target.
+
+__Arguments__
+
+* `fn(options)` - A function or an array of funcitons which is called to verify if the failed request should be retried. Should return `true` or a `string` to trigger a retry.
+
+__Examples__
+
+```js
+api.attachRetryHandler((options) => {
+  // const err = options.error;
+  // const response = options.response;
+  const result = options.result;
+  const infos = options.infos;
+  // const attempt = options.attempt;
+
+  if (infos.uri.indexOf('/service_bindings') >= 0) {
+    if (result && result.error_code && result.error_code === 'UnknownError') {
+      return result.description || 'An unknown error occurred';
+    }
+  }
+
+  if (infos.uri.indexOf('/service_instances') >= 0) {
+    if (result && result.code === 10011) {
+      return result.error_description;
+    }
+  }
+});
+```
+
+```js
+api.attachRetryHandler([
+  (options) => {
+    // const err = options.error;
+    // const response = options.response;
+    const result = options.result;
+    const infos = options.infos;
+    // const attempt = options.attempt;
+
+    if (infos.uri.indexOf('/service_bindings') >= 0) {
+      if (result && result.error_code && result.error_code === 'UnknownError') {
+        return result.description || 'An unknown error occurred';
+      }
+    }
+  },
+  (options) => {
+    // const err = options.error;
+    // const response = options.response;
+    const result = options.result;
+    const infos = options.infos;
+    // const attempt = options.attempt;
+
+    if (infos.uri.indexOf('/service_instances') >= 0) {
+      if (result && result.code === 10011) {
+        return result.error_description;
+      }
+    }
+  }
+]);
+```
 ---------------------------------------
 
 ## App

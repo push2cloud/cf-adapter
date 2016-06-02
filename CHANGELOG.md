@@ -1,3 +1,8 @@
+## [v1.1.0](https://github.com/push2cloud/cf-adapter/compare/v1.0.5...v1.1.0)
+- stats retry event
+- modular retry handlers
+- autoAttachRetryHandler for swisscom
+
 ## [v1.0.4](https://github.com/push2cloud/cf-adapter/compare/v1.0.4...v1.0.5)
 - adds support for ignoring invalid certs in websockets
 
