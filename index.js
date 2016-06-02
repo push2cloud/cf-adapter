@@ -73,10 +73,14 @@ module.exports = (options) => {
 
   api.graceRequestHandlers = [];
   api.attachRetryHandler = (fn) => {
-    if (_.isFunction(fn)) {
+    if (_.isFunction(fn) && api.graceRequestHandlers.indexOf(fn) < 0) {
       api.graceRequestHandlers.push(fn);
     } else {
-      api.graceRequestHandlers = api.graceRequestHandlers.concat(fn);
+      fn.forEach((f) => {
+        if (api.graceRequestHandlers.indexOf(f) < 0) {
+          api.graceRequestHandlers.push(f);
+        }
+      });
     }
   };
 
