@@ -1,5 +1,6 @@
 const debug = require('debug')('push2cloud-cf-adapter:init');
 const _ = require('lodash');
+const autoAttachRetryHandler = require('../lib/autoAttachRetryHandler');
 
 module.exports = (api) => {
   function reinit(callback) {
@@ -19,6 +20,7 @@ module.exports = (api) => {
         if (err) return callback(err);
         debug(info);
         api.targetInfo = info;
+        autoAttachRetryHandler(api, info);
         reinit(callback);
       });
       return;
