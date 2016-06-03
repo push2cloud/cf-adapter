@@ -3,7 +3,7 @@ const request = require('request');
 module.exports = (api) => {
   return (callback) => {
     if (!api.targetInfo) {
-      return callback(new Error('No taget information!'));
+      return callback(new Error('No target information!'));
     }
 
     if (!api.options.username) {
