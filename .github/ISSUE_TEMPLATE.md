@@ -5,6 +5,8 @@ If unsure about something, just do as best as you're able.
 
 Version: version property in package.json
 Platform: either `uname -a` output, or if Windows, version and 32 or 64-bit.
+Node: i.e. node -v
+Npm: i.e. npm -v
 
 It will be much easier for us to fix the issue if a test case that reproduces
 the problem is provided. Ideally this test case should not have any external
@@ -17,5 +19,7 @@ Thank you!
 
 * **Version**:
 * **Platform**:
+* **Node**:
+* **Npm**:
 
 <!-- Enter your issue details below this comment. -->
