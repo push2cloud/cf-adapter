@@ -1,6 +1,7 @@
 const _ = require('lodash');
 const debug = require('debug')('push2cloud-cf-adapter:uploadApp');
 const fs = require('fs');
+const join = require('path').join;
 const zipGenerator = require('../lib/zipGenerator');
 
 module.exports = (api) => {
@@ -24,6 +25,14 @@ module.exports = (api) => {
       return callback(new Error('Please provide an path! \n' + JSON.stringify(options, null, 2)));
     }
 
+    var isFile = false;
+    if (options.appBits) {
+      options.path = join(options.path, options.appBits);
+      if (fs.lstatSync(options.path).isFile()) {
+        isFile = true;
+      }
+    }
+
     var defaults = {
       async: false,
       zipResources: [],
@@ -32,31 +41,33 @@ module.exports = (api) => {
 
     _.defaults(options, defaults);
 
-    zipGenerator(options.path, options.tmpZipPath, (err) => {
-      if (err) return callback(err);
+    const upload = (options) => api.graceRequest({
+      method: 'PUT',
+      uri: `/v2/apps/${options.appGuid}/bits`,
+      qs: {
+        async: options.async
+      },
+      formData: {
+        resources: JSON.stringify(options.zipResources),
+        application: fs.createReadStream(options.path)
+      },
+      json: false
+    }, (err, response, result) => {
+      if (err) {
+        return callback(err);
+      }
 
-      api.graceRequest({
-        method: 'PUT',
-        uri: `/v2/apps/${options.appGuid}/bits`,
-        qs: {
-          async: options.async
-        },
-        formData: {
-          resources: JSON.stringify(options.zipResources),
-          application: fs.createReadStream(options.tmpZipPath)
-        },
-        json: false
-      }, (err, response, result) => {
-        fs.unlink(options.tmpZipPath, (err) => {
-          if (err) debug(err);
-        });
-
-        if (err) {
-          return callback(err);
-        }
-
-        callback(null, result);
-      });
+      callback(null, result);
     });
+
+    if (isFile) {
+      upload(options);
+    } else {
+      zipGenerator(options.path, options.tmpZipPath, (err) => {
+        if (err) return callback(err);
+        options.path = options.tmpZipPath;
+        upload(options);
+      });
+    }
   };
 };
