@@ -41,7 +41,7 @@ module.exports = (api) => {
 
     _.defaults(options, defaults);
 
-    const upload = (options) => api.graceRequest({
+    const upload = (options, callback) => api.graceRequest({
       method: 'PUT',
       uri: `/v2/apps/${options.appGuid}/bits`,
       qs: {
@@ -56,17 +56,26 @@ module.exports = (api) => {
       if (err) {
         return callback(err);
       }
-
       callback(null, result);
     });
 
     if (isFile) {
-      upload(options);
+      upload(options, callback);
     } else {
       zipGenerator(options.path, options.tmpZipPath, (err) => {
         if (err) return callback(err);
         options.path = options.tmpZipPath;
-        upload(options);
+        upload(options, (err, result) => {
+          if (err) {
+            return callback(err);
+          }
+          fs.unlink(options.path, (err) => {
+            if (err) {
+              debug(err);
+            }
+          })
+          callback(null, result);
+        });
       });
     }
   };
