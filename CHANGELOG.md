@@ -1,3 +1,6 @@
+## [v1.1.2](https://github.com/push2cloud/cf-adapter/compare/v1.1.1...v1.1.2)
+- additional retry case for swisscom
+
 ## [v1.1.1](https://github.com/push2cloud/cf-adapter/compare/v1.1.0...v1.1.1)
 - adds support to upload single files (e.g. jar files)
 
