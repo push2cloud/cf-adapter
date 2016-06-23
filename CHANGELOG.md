@@ -1,3 +1,6 @@
+## [v1.1.4](https://github.com/push2cloud/cf-adapter/compare/v1.1.3...v1.1.4)
+- retry fix for delete app
+
 ## [v1.1.3](https://github.com/push2cloud/cf-adapter/compare/v1.1.1...v1.1.3)
 - additional retry case for swisscom
 

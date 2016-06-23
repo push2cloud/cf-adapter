@@ -19,10 +19,10 @@ module.exports = (api) => {
       method: 'DELETE',
       uri: `/v2/apps/${options.appGuid}`
     }, (err, response, result) => {
-      var appIdx;
+      var appIdx = -1;
       if (result && result.code === 100004) {
         appIdx = _.findIndex(api.actualDeploymentConfig.apps, { guid: options.appGuid });
-        if (appIdx) {
+        if (appIdx >= 0) {
           delete api.actualDeploymentConfig.apps[appIdx];
           return callback(null);
         } else {
