@@ -27,7 +27,7 @@
     "gitignore-parser": "0.0.2",
     "lodash": "4.13.1",
     "request": "2.72.0",
-    "semver": "5.1.0",
+    "semver": "5.1.1",
     "ws": "1.1.0"
   },
   "devDependencies": {
