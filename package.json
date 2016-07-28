@@ -20,7 +20,7 @@
   "repository": "push2cloud/cf-adapter",
   "homepage": "http://push2.cloud/",
   "dependencies": {
-    "archiver": "1.0.0",
+    "archiver": "1.0.1",
     "async": "2.0.0-rc.3",
     "debug": "2.2.0",
     "filewalker": "0.1.3",
