@@ -1,3 +1,6 @@
+## [v1.1.5](https://github.com/push2cloud/cf-adapter/compare/v1.1.4...v1.1.5)
+- optimize graceRequest to catch strange >= 500 statusCode responses
+
 ## [v1.1.4](https://github.com/push2cloud/cf-adapter/compare/v1.1.3...v1.1.4)
 - retry fix for delete app
 

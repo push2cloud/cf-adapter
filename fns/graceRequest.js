@@ -109,6 +109,11 @@ module.exports = (api) => {
             return callback(new Error(result.description), response, result);
           }
 
+          if (!err && response.statusCode >= 500) {
+            if (_.isString(result)) return callback(new Error(result), response, result);
+            return callback(new Error('Received a statusCode >= 500'), response, result);
+          }
+
           callback(err, response, result);
         });
       }, attempt * api.options.delay * api.options.delayFactor);
