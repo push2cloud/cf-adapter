@@ -1,6 +1,5 @@
 module.exports = (api) => {
   return (options, callback) => {
-    options.state = 'STOPPED';
-    api.updateApp(options, callback);
+    api.updateApp({ state: 'STOPPED', appGuid: options.appGuid, name: options.name }, callback);
   };
 };

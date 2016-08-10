@@ -4,6 +4,6 @@ module.exports = (api) => {
       return callback(new Error('Please provide an env option! \n' + JSON.stringify(options, null, 2)));
     }
 
-    api.updateApp(options, callback);
+    api.updateApp({ env: options.env, appGuid: options.appGuid, name: options.name }, callback);
   };
 };
