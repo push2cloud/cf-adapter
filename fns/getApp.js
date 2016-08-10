@@ -1,4 +1,3 @@
-const convertSize = require('../lib/convertSize');
 const _ = require('lodash');
 
 module.exports = (api) => {

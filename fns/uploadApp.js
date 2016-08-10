@@ -73,7 +73,7 @@ module.exports = (api) => {
             if (err) {
               debug(err);
             }
-          })
+          });
           callback(null, result);
         });
       });
