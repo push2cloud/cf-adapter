@@ -20,20 +20,20 @@ module.exports = (api) => {
       return callback(new Error('Please provide an appGuid! \n' + JSON.stringify(options, null, 2)));
     }
 
-    var json = {};
-    if (options.newName) json.name = options.newName;
-    if (options.spaceGuid) json.space_guid = options.spaceGuid;
-    if (options.buildpack) json.buildpack = options.buildpack;
-    if (options.command) json.command = options.command;
-    if (options.environment_json) json.env = options.env;
-    if (options.disk_quota) json.disk = options.disk;
-    if (options.memory) json.memory = options.memory;
-    if (options.instances) json.instances = options.instances;
-    if (options.state) json.state = options.state;
     api.graceRequest({
       method: 'PUT',
       uri: `/v2/apps/${options.appGuid}`,
-      json : json
+      json: {
+        name: options.newName,
+        space_guid: api.spaceGuid,
+        buildpack: options.buildpack,
+        command: options.command,
+        environment_json: options.env || undefined,
+        disk_quota: convertSize(options.disk) || undefined,
+        memory: convertSize(options.memory) || undefined,
+        instances: convertSize(options.instances) || undefined,
+        state: options.state
+      }
     }, (err, response, result) => {
       if (err) {
         if (options.state !== 'STOPPED' || !result || result.error_code !== 'UnknownError') {
