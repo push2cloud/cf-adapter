@@ -78,7 +78,7 @@ module.exports = (api) => {
         callback(null, res);
       }
 
-      proceed();
+      proceed(result);
     });
   };
 };
