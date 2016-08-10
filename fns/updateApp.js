@@ -35,33 +35,47 @@ module.exports = (api) => {
       }
     }, (err, response, result) => {
       if (err) {
-        return callback(err);
+        if (options.state !== 'STOPPED' || !result || result.error_code !== 'UnknownError') {
+          return callback(err);
+        }
+
+        api.getApp({ appGuid: options.appGuid }, (errInfo, resultInfo) => {
+          if (errInfo || !resultInfo || !resultInfo.entity) return callback(err);
+
+          if (resultInfo.entity.state !== 'STOPPED') {
+            return callback(err);
+          }
+
+          proceed(resultInfo);
+        });
       }
 
-      if (result.entity.name !== options.newName && options.newName) {
-        delete _.remove(api.actualDeploymentConfig.apps, (a) => a.name === options.name);
+      function proceed(res) {
+        if (res.entity.name !== options.newName && options.newName) {
+          delete _.remove(api.actualDeploymentConfig.apps, (a) => a.name === options.name);
+        }
+
+        var appIdx = _.findIndex(api.actualDeploymentConfig.apps, { name: res.entity.name });
+        if (appIdx < 0) appIdx = api.actualDeploymentConfig.apps.length;
+
+        var indexOfVersion = res.entity.name.lastIndexOf('-');
+        var unversionedName = res.entity.name;
+        if (indexOfVersion >= 0) unversionedName = res.entity.name.substring(0, indexOfVersion);
+
+        api.actualDeploymentConfig.apps[appIdx] = {
+          name: res.entity.name,
+          unversionedName: unversionedName,
+          guid: res.metadata.guid,
+          instances: res.entity.instances,
+          memory: res.entity.memory,
+          disk: res.entity.disk_quota,
+          state: res.entity.state,
+          version: res.entity.name.substring(res.entity.name.lastIndexOf('-') + 1),
+          package_state: res.entity.package_state
+        };
+
+        callback(null, res);
       }
-
-      var appIdx = _.findIndex(api.actualDeploymentConfig.apps, { name: result.entity.name });
-      if (appIdx < 0) appIdx = api.actualDeploymentConfig.apps.length;
-
-      var indexOfVersion = result.entity.name.lastIndexOf('-');
-      var unversionedName = result.entity.name;
-      if (indexOfVersion >= 0) unversionedName = result.entity.name.substring(0, indexOfVersion);
-
-      api.actualDeploymentConfig.apps[appIdx] = {
-        name: result.entity.name,
-        unversionedName: unversionedName,
-        guid: result.metadata.guid,
-        instances: result.entity.instances,
-        memory: result.entity.memory,
-        disk: result.entity.disk_quota,
-        state: result.entity.state,
-        version: result.entity.name.substring(result.entity.name.lastIndexOf('-') + 1),
-        package_state: result.entity.package_state
-      };
-
-      callback(null, result);
     });
   };
 };
