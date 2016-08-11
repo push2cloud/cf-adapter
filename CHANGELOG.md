@@ -1,4 +1,4 @@
-## [v1.1.8](https://github.com/push2cloud/cf-adapter/compare/v1.1.5...v1.1.8)
+## [v1.1.9](https://github.com/push2cloud/cf-adapter/compare/v1.1.5...v1.1.9)
 - sometimes stopping an app causes an UnknownError so we make an additional get request to verify the app
 
 ## [v1.1.5](https://github.com/push2cloud/cf-adapter/compare/v1.1.4...v1.1.5)

@@ -49,6 +49,7 @@ module.exports = (api) => {
 
           proceed(resultInfo);
         });
+        return;
       }
 
       function proceed(res) {
