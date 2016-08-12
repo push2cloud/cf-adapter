@@ -1,3 +1,6 @@
+## [v1.2.0](https://github.com/push2cloud/cf-adapter/compare/v1.1.9...v1.2.0)
+- new function: waitForServiceInstance
+
 ## [v1.1.9](https://github.com/push2cloud/cf-adapter/compare/v1.1.5...v1.1.9)
 - sometimes stopping an app causes an UnknownError so we make an additional get request to verify the app
 

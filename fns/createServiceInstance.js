@@ -54,7 +54,11 @@ module.exports = (api) => {
               name: options.name,
               guid: result.metadata.guid,
               type: options.type,
-              plan: options.plan
+              plan: options.plan,
+              lastOperation: {
+                type: result.entity.last_operation.type,
+                state: result.entity.last_operation.state
+              }
             });
 
             callback(null, result);
@@ -73,7 +77,11 @@ module.exports = (api) => {
         name: options.name,
         guid: result.metadata.guid,
         type: options.type,
-        plan: options.plan
+        plan: options.plan,
+        lastOperation: {
+          type: result.entity.last_operation.type,
+          state: result.entity.last_operation.state
+        }
       });
 
       callback(null, result);

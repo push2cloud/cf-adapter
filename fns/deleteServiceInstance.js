@@ -25,7 +25,7 @@ module.exports = (api) => {
       }
 
       if (api.actualDeploymentConfig) {
-        _.remove(api.actualDeploymentConfig.services, (service) => service.guid = options.serviceInstanceGuid);
+        _.remove(api.actualDeploymentConfig.services, (service) => service.guid === options.serviceInstanceGuid);
       }
 
       callback(null, result);
