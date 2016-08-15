@@ -1,3 +1,6 @@
+## [v1.2.1](https://github.com/push2cloud/cf-adapter/compare/v1.2.0...v1.2.1)
+- fix parseCFSummary when there is no lastOperation on service
+
 ## [v1.2.0](https://github.com/push2cloud/cf-adapter/compare/v1.1.9...v1.2.0)
 - new function: waitForServiceInstance
 
