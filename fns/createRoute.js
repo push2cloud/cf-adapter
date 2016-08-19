@@ -33,7 +33,10 @@ module.exports = (api) => {
       json: {
         domain_guid: options.domainGuid,
         space_guid: api.spaceGuid,
-        host: options.hostname
+        host: options.hostname,
+        path: options.path,
+        port: options.port,
+        generate_port: options.generatePort || false
       }
     }, (err, response, result) => {
       if (result && result.code === 210003) {
@@ -71,7 +74,9 @@ module.exports = (api) => {
               appGuid: undefined,
               hostname: options.hostname,
               domain: dName,
-              app: undefined
+              app: undefined,
+              path: r.entity.path,
+              port: r.entity.port
             });
 
             callback(null, r);

@@ -1,3 +1,6 @@
+## [v1.3.0](https://github.com/push2cloud/cf-adapter/compare/v1.2.1...v1.3.0)
+- possibility to create routes with path and port or generatedPort
+
 ## [v1.2.1](https://github.com/push2cloud/cf-adapter/compare/v1.2.0...v1.2.1)
 - fix parseCFSummary when there is no lastOperation on service
 

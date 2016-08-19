@@ -58,7 +58,9 @@ module.exports = (api) => {
                 guid: route.metadata.guid,
                 domain: dom ? dom.name : undefined,
                 domainGuid: route.entity.domain_guid,
-                hostname: route.entity.host
+                hostname: route.entity.host,
+                path: route.entity.path,
+                port: route.entity.port
               };
             });
             api.routes = newRoutes;

@@ -645,6 +645,9 @@ __Arguments__
   * `domainGuid` - *Optional* The app guid. `domainGuid` or `domain` are mandatory but not both.
   * `domain` - *Optional* The app name. `domainGuid` or `domain` are mandatory but not both.
   * `hostname` - The host portion of the route. Required for shared-domains.
+  * `path` - The path for a route as raw text. 1) Paths must be between 2 and 128 characters 2) Paths must start with a forward slash "/" 3) Paths must not contain a "?"
+  * `port` - The port of the route. Supported for domains of TCP router groups only.
+  * `generatePort` - Set to `true` to generate a random port. Defaults to `false`. Supported for domains for TCP router groups only. Takes precedence over manually specified port.
 * `callback(err, result)` - A callback which is called when function has finished, or an error occurs.
 
 __Example__
