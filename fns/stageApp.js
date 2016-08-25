@@ -16,7 +16,7 @@ module.exports = (api) => {
       return callback(new Error('Please provide an appGuid! \n' + JSON.stringify(options, null, 2)));
     }
 
-    options.messages = ['Starting app instance', 'Uploading complete'];
+    options.messages = ['Starting app instance', 'Uploading complete', 'Starting health monitoring of container'];
     options.failMessages = ['staging failed'];
 
     options.stageTimeout = options.stageTimeout || 300; //seconds

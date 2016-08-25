@@ -1,3 +1,6 @@
+## [v1.4.1](https://github.com/push2cloud/cf-adapter/compare/v1.4.0...v1.4.1)
+- added log message trigger for dockerImage staging
+
 ## [v1.4.0](https://github.com/push2cloud/cf-adapter/compare/v1.3.0...v1.4.0)
 - added options for dockerImage
 
