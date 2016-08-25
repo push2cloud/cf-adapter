@@ -56,7 +56,12 @@ module.exports = (api) => {
         environment_json: options.env,
         disk_quota: convertSize(options.disk) || defaults.disk,
         memory: convertSize(options.memory) || defaults.memory,
-        instances: convertSize(options.instances) || defaults.instances
+        instances: convertSize(options.instances) || defaults.instances,
+        health_check_type: options.healthCheckType,
+        health_check_timeout: options.healthCheckTimeout,
+        diego: options.diego,
+        enable_ssh: options.enableSSH,
+        docker_image: options.dockerImage
       }
     }, (err, response, result) => {
       if (result && result.code === 100002) {

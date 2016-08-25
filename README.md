@@ -427,6 +427,10 @@ __Arguments__
   * `disk` - *Optional* The maximum amount of disk available to an instance of an app. i.e. 256MB, 1G, 256, 1024
   * `memory` - *Optional* The amount of memory each instance should have. i.e. 256MB, 1G, 256, 1024
   * `instances` - *Optional* The number of instances of the app to run. To ensure optimal availability, ensure there are at least 2 instances.
+  * `dockerImage` - *Optional* Name of the Docker image containing the app.
+  * `enableSSH` - *Optional* Enable SSHing into the app. Supported for Diego only. false if SSH is disabled globally or on the space, true if enabled for both
+  * `healthCheckType` - *Optional* Type of health check to perform. 'port' or 'process'
+  * `healthCheckTimeout` - *Optional* Timeout for health checking of an staged app when starting up
 * `callback(err, result)` - A callback which is called when function has finished, or an error occurs.
 
 __Example__

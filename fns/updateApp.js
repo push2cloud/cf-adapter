@@ -32,7 +32,12 @@ module.exports = (api) => {
         disk_quota: convertSize(options.disk) || undefined,
         memory: convertSize(options.memory) || undefined,
         instances: convertSize(options.instances) || undefined,
-        state: options.state
+        state: options.state,
+        health_check_type: options.healthCheckType,
+        health_check_timeout: options.healthCheckTimeout,
+        diego: options.diego,
+        enable_ssh: options.enableSSH,
+        docker_image: options.dockerImage
       }
     }, (err, response, result) => {
       if (err) {
