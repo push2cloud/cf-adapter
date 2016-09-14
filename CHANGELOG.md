@@ -1,3 +1,6 @@
+## [v1.4.2](https://github.com/push2cloud/cf-adapter/compare/v1.4.1...v1.4.2)
+- change default of maxRetries for waitForServiceInstance
+
 ## [v1.4.1](https://github.com/push2cloud/cf-adapter/compare/v1.4.0...v1.4.1)
 - added log message trigger for dockerImage staging
 

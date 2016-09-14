@@ -5,7 +5,7 @@ module.exports = (api) => {
     options = options || {};
     options.timeout = options.timeout || 30;
     options.interval = options.interval || 3;
-    options.maxRetries = options.maxRetries || Math.floor(options.timeout / options.interval);
+    options.maxRetries = options.maxRetries || api.options.maxRetries || Math.floor(options.timeout / options.interval);
 
     var attempt = 0;
 
