@@ -1,3 +1,6 @@
+## [v1.4.4](https://github.com/push2cloud/cf-adapter/compare/v1.4.3...v1.4.4)
+- improves updateServiceInstance function
+
 ## [v1.4.3](https://github.com/push2cloud/cf-adapter/compare/v1.4.2...v1.4.3)
 - adds updateServiceInstance function
 
