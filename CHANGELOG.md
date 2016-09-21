@@ -1,3 +1,6 @@
+## [v1.4.3](https://github.com/push2cloud/cf-adapter/compare/v1.4.2...v1.4.3)
+- adds updateServiceInstance function
+
 ## [v1.4.2](https://github.com/push2cloud/cf-adapter/compare/v1.4.1...v1.4.2)
 - change default of maxRetries for waitForServiceInstance
 
