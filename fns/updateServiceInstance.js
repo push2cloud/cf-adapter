@@ -1,5 +1,3 @@
-const convertSize = require('../lib/convertSize');
-const debug = require('debug')('push2cloud-cf-adapter:updateServiceInstance');
 const _ = require('lodash');
 
 module.exports = (api) => {

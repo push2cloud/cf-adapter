@@ -1,3 +1,6 @@
+## [v1.4.5](https://github.com/push2cloud/cf-adapter/compare/v1.4.4...v1.4.5)
+- improve pushApp to not createApp if not needed
+
 ## [v1.4.4](https://github.com/push2cloud/cf-adapter/compare/v1.4.3...v1.4.4)
 - improves updateServiceInstance function
 
