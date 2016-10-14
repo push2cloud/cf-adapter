@@ -17,7 +17,7 @@ module.exports = (api) => {
 
     options.messages = ['Starting app instance', 'Successfully created container'];
 
-    options.startTimeout = options.startTimeout || 30; //seconds
+    options.startTimeout = options.startTimeout || 60; //seconds
 
     var timer;
 
