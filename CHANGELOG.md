@@ -1,3 +1,6 @@
+## [v1.5.0](https://github.com/push2cloud/cf-adapter/compare/v1.4.6...v1.5.0)
+- use doppler_logging_endpoint when present
+
 ## [v1.4.6](https://github.com/push2cloud/cf-adapter/compare/v1.4.5...v1.4.6)
 - update some dependencies
 

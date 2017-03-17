@@ -17,7 +17,12 @@ module.exports = (api) => {
       return callback(err);
     }
 
-    var ws = new WebSocket(`${api.targetInfo.logging_endpoint}/tail/?app=${options.appGuid}`, {
+    var url = `${api.targetInfo.logging_endpoint}/tail/?app=${options.appGuid}`;
+    if (api.targetInfo.doppler_logging_endpoint) {
+      url = `${api.targetInfo.doppler_logging_endpoint}/apps/${options.appGuid}/stream`;
+    }
+
+    var ws = new WebSocket(url, {
       headers : {
         Authorization: `${api.token.token_type} ${api.token.access_token}`
       },
