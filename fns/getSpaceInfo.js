@@ -13,7 +13,8 @@ module.exports = (api) => {
       uri: `/v2/organizations/${api.orgGuid}/spaces` + (api.spaceGuid ? `/${api.spaceGuid}` : ''),
       qs: api.spaceGuid ? undefined : {
         'q': `name:${api.options.space}`,
-        'inline-relations-depth': 1
+        'inline-relations-depth': 1,
+        'results-per-page': 100
       }
     }, (err, response, result) => {
       if (err) {

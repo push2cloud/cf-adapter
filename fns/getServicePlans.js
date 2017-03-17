@@ -10,7 +10,8 @@ module.exports = (api) => {
       method: 'GET',
       uri: '/v2/service_plans',
       qs: {
-        'q': `service_guid:${options.serviceId}`
+        'q': `service_guid:${options.serviceId}`,
+        'results-per-page': 100
       }
     }, (err, response, result) => {
       if (err) {

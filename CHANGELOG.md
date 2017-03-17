@@ -1,3 +1,6 @@
+## [v1.5.1](https://github.com/push2cloud/cf-adapter/compare/v1.5.0...v1.5.1)
+- use max possible value for pagination
+
 ## [v1.5.0](https://github.com/push2cloud/cf-adapter/compare/v1.4.6...v1.5.0)
 - use doppler_logging_endpoint when present
 
