@@ -34,7 +34,7 @@ module.exports = (api) => {
         instances: convertSize(options.instances) || undefined,
         state: options.state,
         health_check_type: options.healthCheckType,
-        health_check_timeout: options.healthCheckTimeout,
+        health_check_timeout: options.healthCheckTimeout || 120,
         diego: options.diego,
         enable_ssh: options.enableSSH,
         docker_image: options.dockerImage

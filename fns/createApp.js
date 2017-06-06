@@ -58,7 +58,7 @@ module.exports = (api) => {
         memory: convertSize(options.memory) || defaults.memory,
         instances: convertSize(options.instances) || defaults.instances,
         health_check_type: options.healthCheckType,
-        health_check_timeout: options.healthCheckTimeout,
+        health_check_timeout: options.healthCheckTimeout || 120,
         diego: options.diego,
         enable_ssh: options.enableSSH,
         docker_image: options.dockerImage
