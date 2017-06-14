@@ -15,7 +15,7 @@ module.exports = (api) => {
       return callback(new Error('Please provide an appGuid! \n' + JSON.stringify(options, null, 2)));
     }
 
-    options.startTimeout = options.startTimeout || 90; //seconds
+    options.startTimeout = options.startTimeout || 120; //seconds
 
     var timer;
 
