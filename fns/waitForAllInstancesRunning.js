@@ -9,7 +9,7 @@ module.exports = (api) => {
   return (options, callback) => {
     options = options || {};
 
-    options.timeout = options.timeout || 30;
+    options.timeout = options.timeout || 90;
     options.interval = options.interval || 3;
     options.maxRetries = options.maxRetries || Math.floor(options.timeout / options.interval);
 
