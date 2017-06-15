@@ -1,5 +1,5 @@
-## [v1.5.4](https://github.com/push2cloud/cf-adapter/compare/v1.5.3...v1.5.4)
-- make bindService aware of actualDeploymentConfig
+## [v1.5.5](https://github.com/push2cloud/cf-adapter/compare/v1.5.3...v1.5.5)
+- bindService check if already existing
 
 ## [v1.5.3](https://github.com/push2cloud/cf-adapter/compare/v1.5.2...v1.5.3)
 - use 120s as default timeout for waitForAllInstancesRunning and startAppAndWaitForMessages

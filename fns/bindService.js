@@ -115,36 +115,24 @@ module.exports = (api) => {
       });
     }
 
-    if (api.actualDeploymentConfig) {
-      var serviceBinding = _.find(api.actualDeploymentConfig.serviceBindings, {
-        serviceInstanceGuid: options.serviceInstanceGuid,
-        appGuid: options.appGuid
-      });
-      if (serviceBinding) {
-        api.getServiceBindings(options, (err, results) => {
-          if (err) return callback(err);
+    api.getServiceBindings(options, (err, results) => {
+      if (err) return callback(err);
 
-          if (!results || results.length === 0) {
-            debug('Missing service binding infos!', results);
-            return callback(new Error('Missing service binding infos!'));
-          }
-
-          var sb = _.find(results, (item) => {
-            return item.entity.app_guid === options.appGuid
-                && item.entity.service_instance_guid === options.serviceInstanceGuid;
-          });
-
-          if (sb) {
-            debug('Service binding already existing!');
-            return callback(null, sb);
-          }
-
-          requestIt();
-        });
-        return;
+      if (!results || results.length === 0) {
+        return requestIt();
       }
-    }
 
-    requestIt();
+      var sb = _.find(results, (item) => {
+        return item.entity.app_guid === options.appGuid
+            && item.entity.service_instance_guid === options.serviceInstanceGuid;
+      });
+
+      if (sb) {
+        debug('Service binding already existing!');
+        return callback(null, sb);
+      }
+
+      requestIt();
+    });
   };
 };
