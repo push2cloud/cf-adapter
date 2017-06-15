@@ -34,83 +34,117 @@ module.exports = (api) => {
       return callback(new Error('Please provide an appGuid! \n' + JSON.stringify(options, null, 2)));
     }
 
-    api.graceRequest({
-      method: 'POST',
-      uri: '/v2/service_bindings',
-      json: {
-        service_instance_guid: options.serviceInstanceGuid,
-        app_guid: options.appGuid,
-        parameters: options.parameters
-      }
-    }, asyncOperationInProgressCheck, (err, response, result) => {
-      if (result && result.code === 90003) {
-        if (!_.find(api.actualDeploymentConfig.serviceBindings, { appGuid: options.appGuid,
-                                                                  serviceInstanceGuid: options.serviceInstanceGuid })) {
-          api.getServiceBindings(options, (err, results) => {
-            if (err) {
-              return callback(err);
-            }
-
-            if (!results || results.length === 0) {
-              debug('Missing service binding infos!', results);
-              return callback(new Error('Missing service binding infos!'));
-            }
-
-            var sb = _.find(results, (item) => {
-              return item.entity.app_guid === options.appGuid
-                  && item.entity.service_instance_guid === options.serviceInstanceGuid;
-            });
-
-            if (!sb) {
-              debug('Missing service binding infos!', results);
-              return callback(new Error('Missing service binding infos!'));
-            }
-
-            var service, app;
-            if (api.actualDeploymentConfig) {
-              service = _.find(api.actualDeploymentConfig.services, { guid: options.serviceInstanceGuid });
-              app = _.find(api.actualDeploymentConfig.apps, { guid: options.appGuid });
-            }
-
-            api.actualDeploymentConfig.serviceBindings.push({
-              guid: sb.metadata.guid,
-              appGuid: options.appGuid,
-              serviceInstanceGuid: options.serviceInstanceGuid,
-              service: service.name,
-              app: app.name
-            });
-
-            callback(null, sb);
-          });
-          return;
-        } else {
-          return callback(new Error(result.description));
+    function requestIt() {
+      api.graceRequest({
+        method: 'POST',
+        uri: '/v2/service_bindings',
+        json: {
+          service_instance_guid: options.serviceInstanceGuid,
+          app_guid: options.appGuid,
+          parameters: options.parameters
         }
-      }
+      }, asyncOperationInProgressCheck, (err, response, result) => {
+        if (result && result.code === 90003) {
+          if (!_.find(api.actualDeploymentConfig.serviceBindings, { appGuid: options.appGuid,
+                                                                    serviceInstanceGuid: options.serviceInstanceGuid })) {
+            api.getServiceBindings(options, (err, results) => {
+              if (err) {
+                return callback(err);
+              }
 
-      if (err && !(result && result.code === 90003)) {
-        return callback(err);
-      }
+              if (!results || results.length === 0) {
+                debug('Missing service binding infos!', results);
+                return callback(new Error('Missing service binding infos!'));
+              }
 
-      if (!result || !result.metadata) {
-        return callback(new Error('Not expected result! \n' + JSON.stringify(result, null, 2)));
-      }
+              var sb = _.find(results, (item) => {
+                return item.entity.app_guid === options.appGuid
+                    && item.entity.service_instance_guid === options.serviceInstanceGuid;
+              });
 
-      var service, app;
-      if (api.actualDeploymentConfig) {
-        service = _.find(api.actualDeploymentConfig.services, { guid: options.serviceInstanceGuid });
-        app = _.find(api.actualDeploymentConfig.apps, { guid: options.appGuid });
-      }
+              if (!sb) {
+                debug('Missing service binding infos!', results);
+                return callback(new Error('Missing service binding infos!'));
+              }
 
-      api.actualDeploymentConfig.serviceBindings.push({
-        guid: result.metadata.guid,
-        appGuid: options.appGuid,
-        serviceInstanceGuid: options.serviceInstanceGuid,
-        service: service.name,
-        app: app.name
+              var service, app;
+              if (api.actualDeploymentConfig) {
+                service = _.find(api.actualDeploymentConfig.services, { guid: options.serviceInstanceGuid });
+                app = _.find(api.actualDeploymentConfig.apps, { guid: options.appGuid });
+              }
+
+              api.actualDeploymentConfig.serviceBindings.push({
+                guid: sb.metadata.guid,
+                appGuid: options.appGuid,
+                serviceInstanceGuid: options.serviceInstanceGuid,
+                service: service.name,
+                app: app.name
+              });
+
+              callback(null, sb);
+            });
+            return;
+          } else {
+            return callback(new Error(result.description));
+          }
+        }
+
+        if (err && !(result && result.code === 90003)) {
+          return callback(err);
+        }
+
+        if (!result || !result.metadata) {
+          return callback(new Error('Not expected result! \n' + JSON.stringify(result, null, 2)));
+        }
+
+        var service, app;
+        if (api.actualDeploymentConfig) {
+          service = _.find(api.actualDeploymentConfig.services, { guid: options.serviceInstanceGuid });
+          app = _.find(api.actualDeploymentConfig.apps, { guid: options.appGuid });
+        }
+
+        api.actualDeploymentConfig.serviceBindings.push({
+          guid: result.metadata.guid,
+          appGuid: options.appGuid,
+          serviceInstanceGuid: options.serviceInstanceGuid,
+          service: service.name,
+          app: app.name
+        });
+
+        callback(null, result);
       });
+    }
 
-      callback(null, result);
-    });
+    if (api.actualDeploymentConfig) {
+      var serviceBinding = _.find(api.actualDeploymentConfig.serviceBindings, {
+        serviceInstanceGuid: options.serviceInstanceGuid,
+        appGuid: options.appGuid
+      });
+      if (serviceBinding) {
+        api.getServiceBindings(options, (err, results) => {
+          if (err) return callback(err);
+
+          if (!results || results.length === 0) {
+            debug('Missing service binding infos!', results);
+            return callback(new Error('Missing service binding infos!'));
+          }
+
+          var sb = _.find(results, (item) => {
+            return item.entity.app_guid === options.appGuid
+                && item.entity.service_instance_guid === options.serviceInstanceGuid;
+          });
+
+          if (sb) {
+            debug('Service binding already existing!');
+            return callback(null, sb);
+          }
+
+          requestIt();
+        });
+        return;
+      }
+    }
+
+    requestIt();
   };
 };
