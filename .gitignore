@@ -32,6 +32,8 @@ node_modules/**/*
 private_node_modules
 private_node_modules/**/*
 
+package-lock.json
+
 .config
 .node-gyp
 .npm

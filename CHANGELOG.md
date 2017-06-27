@@ -1,3 +1,8 @@
+## [v1.6.0](https://github.com/push2cloud/cf-adapter/compare/v1.5.5...v1.6.0)
+- createTunnel
+- getCode
+- getEnv
+
 ## [v1.5.5](https://github.com/push2cloud/cf-adapter/compare/v1.5.3...v1.5.5)
 - bindService check if already existing
 
