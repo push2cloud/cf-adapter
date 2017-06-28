@@ -1,5 +1,14 @@
 const _ = require('lodash');
+const debug = require('debug')('push2cloud-cf-adapter:createTunnel');
 const tunnel = require('tunnel-ssh');
+const exec = require('child_process').exec;
+const execFileSync = require('child_process').execFileSync;
+var sshpassInstalled = true;
+try {
+  execFileSync('which', ['sshpass']);
+} catch(e) {
+  sshpassInstalled = false;
+}
 
 module.exports = (api) => {
   return (options, callback) => {
@@ -39,7 +48,7 @@ module.exports = (api) => {
     options.instance = options.instance || 0;
 
     api.getCode((err, code) => {
-      if (err) return callback(err);
+      if (err) return callback(err, { close: () => {} });
 
       const config = {
         username: `cf:${options.appGuid}/${options.instance}`,
@@ -48,13 +57,24 @@ module.exports = (api) => {
         port: sshPort,
         dstHost: options.destinationHost,
         dstPort: options.destinationPort,
-        localPort: options.localPort
+        localPort: options.localPort,
+        keepAlive: true
       };
 
-      tunnel(config, (err, tnl) => {
-        if (err) return callback(err);
-        callback(null, tnl);
+      if (!sshpassInstalled) {
+        tunnel(config, (err, tnl) => {
+          if (err) return callback(err, { close: () => {} });
+          callback(null, tnl);
+        });
+        return;
+      }
+
+      const childProcess = exec(`sshpass -p ${config.password} ssh -L ${config.localPort}:${config.dstHost}:${config.dstPort} ${config.username}@${config.host} -p ${config.port} -N`, (err) => {
+        if (err) debug(err);
       });
+      callback(null, {
+        close: () => childProcess.kill()
+      })
     });
   };
 };

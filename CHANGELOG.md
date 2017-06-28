@@ -1,3 +1,6 @@
+## [v1.6.1](https://github.com/push2cloud/cf-adapter/compare/v1.6.0...v1.6.1)
+- optimize createTunnel
+
 ## [v1.6.0](https://github.com/push2cloud/cf-adapter/compare/v1.5.5...v1.6.0)
 - createTunnel
 - getCode
