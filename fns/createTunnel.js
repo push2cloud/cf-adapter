@@ -72,9 +72,11 @@ module.exports = (api) => {
       const childProcess = exec(`sshpass -p ${config.password} ssh -L ${config.localPort}:${config.dstHost}:${config.dstPort} ${config.username}@${config.host} -p ${config.port} -N`, (err) => {
         if (err) debug(err);
       });
-      callback(null, {
-        close: () => childProcess.kill()
-      })
+      setTimeout(() => {
+        callback(null, {
+          close: () => childProcess.kill()
+        });
+      }, 2000);
     });
   };
 };
