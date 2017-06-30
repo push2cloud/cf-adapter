@@ -69,7 +69,7 @@ module.exports = (api) => {
         return;
       }
 
-      const childProcess = exec(`sshpass -p ${config.password} ssh -L ${config.localPort}:${config.dstHost}:${config.dstPort} ${config.username}@${config.host} -p ${config.port} -N`, (err) => {
+      const childProcess = exec(`sshpass -p ${config.password} ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -L ${config.localPort}:${config.dstHost}:${config.dstPort} ${config.username}@${config.host} -p ${config.port} -N`, (err) => {
         if (err) debug(err);
       });
       setTimeout(() => {

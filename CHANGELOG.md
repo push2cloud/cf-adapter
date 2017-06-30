@@ -1,3 +1,6 @@
+## [v1.6.3](https://github.com/push2cloud/cf-adapter/compare/v1.6.2...v1.6.3)
+- createTunnel: disable strict host key checking for ssh fallback
+
 ## [v1.6.2](https://github.com/push2cloud/cf-adapter/compare/v1.6.1...v1.6.2)
 - optimize createTunnel
 
