@@ -1,6 +1,6 @@
 {
   "name": "push2cloud-cf-adapter",
-  "version": "1.6.4",
+  "version": "1.6.5",
   "description": "abstracts cloud foundry api",
   "main": "index.js",
   "scripts": {
