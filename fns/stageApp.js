@@ -54,6 +54,11 @@ module.exports = (api) => {
       api.tailAppLogsAndWaitFor(options, clb);
     })();
 
-    api.startApp({ appGuid: options.appGuid, name: options.name }, _.noop);
+    api.startApp({ appGuid: options.appGuid, name: options.name }, (err) => {
+      if (err) {
+        debug(err);
+        api.startApp({ appGuid: options.appGuid, name: options.name }, _.noop);
+      }
+    });
   };
 };
