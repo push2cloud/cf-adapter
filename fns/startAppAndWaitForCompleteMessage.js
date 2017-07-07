@@ -1,3 +1,4 @@
+const debug = require('debug')('push2cloud-cf-adapter:startAppAndWaitForCompleteMessage');
 const _ = require('lodash');
 
 module.exports = (api) => {
@@ -30,7 +31,14 @@ module.exports = (api) => {
     timer = setTimeout(() => {
       clb(new Error(`Starting for app ${options.name || options.appGuid} took longer than ${options.startTimeout} seconds!`));
     }, 1000 * options.startTimeout);
-    options.onReady = () => api.startApp({ appGuid: options.appGuid, name: options.name }, _.noop);
+    options.onReady = () => {
+      api.startApp({ appGuid: options.appGuid, name: options.name }, (err) => {
+        if (err) {
+          debug(err);
+          api.startApp({ appGuid: options.appGuid, name: options.name }, _.noop);
+        }
+      });
+    };
     api.tailAppLogsAndWaitFor(options, clb);
   };
 };

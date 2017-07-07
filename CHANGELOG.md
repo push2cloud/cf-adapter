@@ -1,3 +1,6 @@
+## [v1.6.5](https://github.com/push2cloud/cf-adapter/compare/v1.6.4...v1.6.5)
+- make start and wait for functions more fault tolerant
+
 ## [v1.6.4](https://github.com/push2cloud/cf-adapter/compare/v1.6.3...v1.6.4)
 - make stageApp more fault tolerant
 
