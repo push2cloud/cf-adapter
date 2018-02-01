@@ -1,3 +1,6 @@
+## [v1.6.6](https://github.com/push2cloud/cf-adapter/compare/v1.6.5...v1.6.6)
+- fix for parsing service infos of a user provided service
+
 ## [v1.6.5](https://github.com/push2cloud/cf-adapter/compare/v1.6.4...v1.6.5)
 - make start and wait for functions more fault tolerant
 
