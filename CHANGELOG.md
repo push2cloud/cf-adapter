@@ -1,3 +1,6 @@
+## [v1.6.7](https://github.com/push2cloud/cf-adapter/compare/v1.6.6...v1.6.7)
+- added new complete message for new cell logs
+
 ## [v1.6.6](https://github.com/push2cloud/cf-adapter/compare/v1.6.5...v1.6.6)
 - fix for parsing service infos of a user provided service
 
