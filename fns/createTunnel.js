@@ -6,7 +6,7 @@ const execFileSync = require('child_process').execFileSync;
 var sshpassInstalled = true;
 try {
   execFileSync('which', ['sshpass']);
-} catch(e) {
+} catch (e) {
   sshpassInstalled = false;
 }
 

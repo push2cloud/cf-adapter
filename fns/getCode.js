@@ -1,6 +1,5 @@
 const request = require('request');
 const urlModule = require('url');
-const debug = require('debug')('push2cloud-cf-adapter:getCode');
 
 module.exports = (api) => {
   return (options, callback) => {

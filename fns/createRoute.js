@@ -40,8 +40,7 @@ module.exports = (api) => {
       }
     }, (err, response, result) => {
       if (result && result.code === 210003) {
-        if (!_.find(api.actualDeploymentConfig.routes, { domainGuid: options.domainGuid,
-                                                         hostname: options.hostname })) {
+        if (!_.find(api.actualDeploymentConfig.routes, { domainGuid: options.domainGuid, hostname: options.hostname })) {
           api.getRoutes(options, (err, results) => {
             if (err) {
               return callback(err);

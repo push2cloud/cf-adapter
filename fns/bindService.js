@@ -45,8 +45,7 @@ module.exports = (api) => {
         }
       }, asyncOperationInProgressCheck, (err, response, result) => {
         if (result && result.code === 90003) {
-          if (!_.find(api.actualDeploymentConfig.serviceBindings, { appGuid: options.appGuid,
-                                                                    serviceInstanceGuid: options.serviceInstanceGuid })) {
+          if (!_.find(api.actualDeploymentConfig.serviceBindings, { appGuid: options.appGuid, serviceInstanceGuid: options.serviceInstanceGuid })) {
             api.getServiceBindings(options, (err, results) => {
               if (err) {
                 return callback(err);

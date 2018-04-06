@@ -16,7 +16,7 @@ module.exports = (api) => {
       return callback(new Error('Please provide an appGuid! \n' + JSON.stringify(options, null, 2)));
     }
 
-    options.messages = ['Starting app instance', 'Successfully created container'];
+    options.messages = ['Starting app instance', 'Successfully created container', 'successfully created container'];
 
     options.startTimeout = options.startTimeout || 60; //seconds
 
