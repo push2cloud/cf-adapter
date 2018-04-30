@@ -1,3 +1,6 @@
+## [v1.7.0](https://github.com/push2cloud/cf-adapter/compare/v1.6.7...v1.7.0)
+- basic functions for user provided service instance
+
 ## [v1.6.7](https://github.com/push2cloud/cf-adapter/compare/v1.6.6...v1.6.7)
 - added new complete message for new cell logs
 
