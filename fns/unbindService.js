@@ -51,10 +51,13 @@ module.exports = (api) => {
               _.remove(api.actualDeploymentConfig.serviceBindings, { guid: options.serviceBindingGuid });
             }
 
+            console.log('DELETE SERVICE BINDING', options.serviceBindingGuid);
+
             let attempt = 0;
             (function retry() {
               setTimeout(() => {
                 api.getServiceBinding({ serviceBindingGuid: options.serviceBindingGuid }, (retryError) => {
+                  console.log('CHECKING IF SERVICE IS UNBOUND', options.serviceBindingGuid, retryError.code);
                   if (retryError && SERVICE_NOT_FOUND.includes(retryError.code)) {
                     return callback(null, result);
                   }
