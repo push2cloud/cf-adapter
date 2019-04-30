@@ -1,5 +1,7 @@
 const _ = require('lodash');
 
+const APP_NOT_FOUND = 100004;
+
 module.exports = (api) => {
   return (options, callback) => {
     options = options || {};
@@ -20,7 +22,7 @@ module.exports = (api) => {
       uri: `/v2/apps/${options.appGuid}`
     }, (err, response, result) => {
       var appIdx = -1;
-      if (result && result.code === 100004) {
+      if (result && result.code === APP_NOT_FOUND) {
         appIdx = _.findIndex(api.actualDeploymentConfig.apps, { guid: options.appGuid });
         if (appIdx >= 0) {
           delete api.actualDeploymentConfig.apps[appIdx];
@@ -30,7 +32,7 @@ module.exports = (api) => {
         }
       }
 
-      if (err && !(result && result.code === 100004)) {
+      if (err && !(result && result.code === APP_NOT_FOUND)) {
         return callback(err);
       }
 
