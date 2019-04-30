@@ -3,7 +3,7 @@ const asyncOperationInProgressCheck = require('../lib/graceRequestHandler/asyncO
 const debug = require('debug')('push2cloud-cf-adapter:waitForServiceUnbound');
 
 // CF error for not found service
-//   serviice not found ---vv       vv--- service binding not found
+//   service not found ---vv       vv--- service binding not found
 const SERVICE_NOT_FOUND = [120003, 90004];
 
 module.exports = (api) => {
