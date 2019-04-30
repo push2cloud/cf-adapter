@@ -1,5 +1,10 @@
 const _ = require('lodash');
 const asyncOperationInProgressCheck = require('../lib/graceRequestHandler/asyncOperationInProgress');
+const debug = require('debug')('push2cloud-cf-adapter:waitForServiceUnbound');
+
+// CF error for not found service
+//   serviice not found ---vv       vv--- service binding not found
+const SERVICE_NOT_FOUND = [120003, 90004];
 
 module.exports = (api) => {
   return (options, callback) => {
@@ -46,7 +51,25 @@ module.exports = (api) => {
               _.remove(api.actualDeploymentConfig.serviceBindings, { guid: options.serviceBindingGuid });
             }
 
-            callback(null, result);
+            let attempt = 0;
+            (function retry() {
+              setTimeout(() => {
+                api.getServiceBinding({ serviceBindingGuid: options.serviceBindingGuid }, (retryError) => {
+                  if (retryError && SERVICE_NOT_FOUND.includes(retryError.code)) {
+                    return callback(null, result);
+                  }
+
+                  if (attempt >= options.maxRetries) {
+                    return callback(new Error(`Waiting for unbind service ${options.name || options.serviceInstanceGuid} timed out!`));
+                  }
+
+                  attempt++;
+                  debug(`${attempt}. retry for ${options.name || options.serviceInstanceGuid}`);
+
+                  retry();
+                });
+              }, options.interval * 1000);
+            }());
           });
         });
       }
