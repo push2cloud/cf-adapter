@@ -31,11 +31,8 @@ module.exports = (api) => {
     }, asyncOperationInProgressCheck, (err, response, result) => {
       if (err && response && response.error_code === 'CF-ServiceBindingNotFound') {
         api.getServiceBinding({ serviceBindingGuid: options.serviceBindingGuid }, (newError, result) => {
-          if (newError) {
-            return callback(newError);
-          }
-
           if (!result) {
+            debug(`Unable to find service binding ${options.name || options.serviceBindingGuid}`);
             return callback(err);
           }
 
@@ -47,45 +44,39 @@ module.exports = (api) => {
               return callback(err);
             }
 
-            if (api.actualDeploymentConfig) {
-              _.remove(api.actualDeploymentConfig.serviceBindings, { guid: options.serviceBindingGuid });
-            }
-
-            console.log('DELETE SERVICE BINDING', options.serviceBindingGuid);
-
-            let attempt = 0;
-            (function retry() {
-              setTimeout(() => {
-                api.getServiceBinding({ serviceBindingGuid: options.serviceBindingGuid }, (retryError) => {
-                  console.log('CHECKING IF SERVICE IS UNBOUND', options.serviceBindingGuid, retryError.code);
-                  if (retryError && SERVICE_NOT_FOUND.includes(retryError.code)) {
-                    return callback(null, result);
-                  }
-
-                  if (attempt >= options.maxRetries) {
-                    return callback(new Error(`Waiting for unbind service ${options.name || options.serviceInstanceGuid} timed out!`));
-                  }
-
-                  attempt++;
-                  debug(`${attempt}. retry for ${options.name || options.serviceInstanceGuid}`);
-
-                  retry();
-                });
-              }, options.interval * 1000);
-            }());
+            waitForServiceUnbound(options.serviceBindingGuid, result);
           });
         });
       }
 
-      if (err) {
-        return callback(err);
-      }
-
-      if (api.actualDeploymentConfig) {
-        _.remove(api.actualDeploymentConfig.serviceBindings, { guid: options.serviceBindingGuid });
-      }
-
-      callback(null, result);
+      waitForServiceUnbound(options.serviceBindingGuid, result);
     });
+
+    let attempt = 0;
+    const retryOptions = {
+      maxRetries: 5,
+      interval: 3
+    };
+    function waitForServiceUnbound(serviceBindingGuid, originalResult) {
+      setTimeout(function() {
+        api.getServiceBinding({ serviceBindingGuid: serviceBindingGuid }, (newError, result) => {
+          if (SERVICE_NOT_FOUND.includes(newError.code)) {
+            if (api.actualDeploymentConfig) {
+              _.remove(api.actualDeploymentConfig.serviceBindings, { guid: options.serviceBindingGuid });
+            }
+            return callback(null, originalResult);
+          }
+
+          if (attempt >= retryOptions.maxRetries) {
+            return callback(new Error(`Waiting for service unbind ${options.name || options.serviceBindingGuid} timed out! Most likely a swisscom issue.`));
+          }
+
+          attempt++;
+          debug(`${attempt}. retry for service unbdind ${options.name || options.serviceBindingGuid}`);
+
+          waitForServiceUnbound();
+        });
+      }, retryOptions.interval * 1000);
+    }
   };
 };
