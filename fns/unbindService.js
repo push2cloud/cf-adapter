@@ -68,13 +68,13 @@ module.exports = (api) => {
           }
 
           if (attempt >= retryOptions.maxRetries) {
-            return callback(new Error(`Waiting for service unbind ${options.name || options.serviceBindingGuid} timed out! Most likely a swisscom issue.`));
+            return callback(new Error(`Check if service was successfully unbound ${options.name || options.serviceBindingGuid} timed out! Most likely a swisscom issue.`));
           }
 
           attempt++;
-          debug(`${attempt}. retry for service unbdind ${options.name || options.serviceBindingGuid}`);
+          debug(`${attempt}. retry to check if service was successfully unbound ${options.name || options.serviceBindingGuid}`);
 
-          waitForServiceUnbound();
+          waitForServiceUnbound(serviceBindingGuid, originalResult);
         });
       }, retryOptions.interval * 1000);
     }
