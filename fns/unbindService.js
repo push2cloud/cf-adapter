@@ -2,10 +2,6 @@ const _ = require('lodash');
 const asyncOperationInProgressCheck = require('../lib/graceRequestHandler/asyncOperationInProgress');
 const debug = require('debug')('push2cloud-cf-adapter:waitForServiceUnbound');
 
-// CF error for not found service
-//   service not found ---vv       vv--- service binding not found
-const SERVICE_NOT_FOUND = [120003, 90004];
-
 module.exports = (api) => {
   return (options, callback) => {
     options = options || {};
@@ -36,6 +32,8 @@ module.exports = (api) => {
             return callback(err);
           }
 
+          debug(`Retrying to delete ${options.name || options.serviceBindingGuid}`);
+
           api.graceRequest({
             method: 'DELETE',
             uri: `/v2/service_bindings/${options.serviceBindingGuid}`
@@ -54,13 +52,20 @@ module.exports = (api) => {
 
     let attempt = 0;
     const retryOptions = {
-      maxRetries: 5,
+      maxRetries: 15,
       interval: 3
     };
     function waitForServiceUnbound(serviceBindingGuid, originalResult) {
       setTimeout(function() {
         api.getServiceBinding({ serviceBindingGuid: serviceBindingGuid }, (newError, result) => {
-          if (SERVICE_NOT_FOUND.includes(newError.code)) {
+
+          attempt++;
+          debug(`${attempt}. attempt to check if service was successfully unbound ${options.name || options.serviceBindingGuid}`);
+
+          // apparently an undefined result from the api.getServiceBinding means that
+          // the service binding wasn't found -> we can assume that it was successfully unbound.
+          if (!result) {
+            debug(`Service ${options.name || options.serviceBindingGuid} was successfully unbound after ${attempt} retries`);
             if (api.actualDeploymentConfig) {
               _.remove(api.actualDeploymentConfig.serviceBindings, { guid: options.serviceBindingGuid });
             }
@@ -70,9 +75,6 @@ module.exports = (api) => {
           if (attempt >= retryOptions.maxRetries) {
             return callback(new Error(`Check if service was successfully unbound ${options.name || options.serviceBindingGuid} timed out! Most likely a swisscom issue.`));
           }
-
-          attempt++;
-          debug(`${attempt}. retry to check if service was successfully unbound ${options.name || options.serviceBindingGuid}`);
 
           waitForServiceUnbound(serviceBindingGuid, originalResult);
         });
