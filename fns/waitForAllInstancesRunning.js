@@ -32,7 +32,7 @@ module.exports = (api) => {
           if (err) return callback(err);
 
           if (attempt >= options.maxRetries) {
-            return callback(new Error(`${options.name || options.appGuid} timeouted!`));
+            return callback(new Error(`${options.name || options.appGuid} timed out!`));
           }
 
           var running = allInstancesRunning(instances);

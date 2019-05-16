@@ -19,7 +19,7 @@ module.exports = (api) => {
           }
 
           if (attempt >= options.maxRetries) {
-            return callback(new Error(`Waiting for service ${options.name || options.serviceInstanceGuid} timeouted!`));
+            return callback(new Error(`Waiting for service ${options.name || options.serviceInstanceGuid} timed out!`));
           }
 
           attempt++;
