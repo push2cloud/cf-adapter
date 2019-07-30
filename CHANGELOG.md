@@ -1,3 +1,9 @@
+## [v1.7.4](https://github.com/push2cloud/cf-adapter/compare/v1.7.3...v1.7.4)
+- fix createUserProvidedServiceInstance response handling
+
+## [v1.7.3](https://github.com/push2cloud/cf-adapter/compare/v1.7.2...v1.7.3)
+- wait for service unbound confirmation before execute callback
+
 ## [v1.7.2](https://github.com/push2cloud/cf-adapter/compare/v1.7.1...v1.7.2)
 - in case of error during start or stop app, retry once
 
